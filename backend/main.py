@@ -44,3 +44,33 @@ def list_applications():
     db.close()
 
     return apps
+
+@app.get("/applications/{app_id}", response_model=JobApplicationRead)
+def get_application(app_id: int):
+    db = SessionLocal()
+
+    app = db.query(JobApplicationDB).filter(JobApplicationDB.id == app_id).first()
+
+    db.close()
+
+    if app is None:
+        raise HTTPException(status_code=404, detail="Application not found")
+
+    return app
+
+@app.delete("/applications/{app_id}")
+def delete_application(app_id: int):
+
+    db = SessionLocal()
+
+    app = db.query(JobApplicationDB).filter(JobApplicationDB.id == app_id).first()
+
+    if app is None:
+        db.close()
+        raise HTTPException(status_code=404, detail="Application not found")
+
+    db.delete(app)
+    db.commit()
+    db.close()
+
+    return {"message": "Application deleted"}
