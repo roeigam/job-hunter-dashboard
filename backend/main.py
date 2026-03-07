@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi import FastAPI
 from typing import List
+from fastapi.middleware.cors import CORSMiddleware
 
 from backend.database import engine, Base, SessionLocal
 from backend.models_db import JobApplicationDB
@@ -9,6 +10,13 @@ from backend.models import JobApplicationCreate, JobApplicationRead, JobApplicat
 
 app = FastAPI(title="Job Hunter Dashboard")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # create database tables if they don't exist
 Base.metadata.create_all(bind=engine)
 
