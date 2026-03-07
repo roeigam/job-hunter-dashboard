@@ -12,3 +12,10 @@ class JobApplicationCreate(BaseModel):
 
 class JobApplicationRead(JobApplicationCreate):
     id: int
+
+class JobApplicationUpdate(BaseModel):
+    company: str
+    position: str
+    status: str
+    applied_date: date
+    notes: str | None = None

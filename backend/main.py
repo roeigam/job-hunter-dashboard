@@ -4,7 +4,7 @@ from typing import List
 
 from backend.database import engine, Base, SessionLocal
 from backend.models_db import JobApplicationDB
-from backend.models import JobApplicationCreate, JobApplicationRead
+from backend.models import JobApplicationCreate, JobApplicationRead, JobApplicationUpdate
 
 
 app = FastAPI(title="Job Hunter Dashboard")
@@ -74,3 +74,26 @@ def delete_application(app_id: int):
     db.close()
 
     return {"message": "Application deleted"}
+
+@app.patch("/applications/{app_id}", response_model=JobApplicationRead)
+def update_application(app_id: int, app_data: JobApplicationUpdate):
+
+    db = SessionLocal()
+
+    app = db.query(JobApplicationDB).filter(JobApplicationDB.id == app_id).first()
+
+    if app is None:
+        db.close()
+        raise HTTPException(status_code=404, detail="Application not found")
+
+    app.company = app_data.company
+    app.position = app_data.position
+    app.status = app_data.status
+    app.applied_date = app_data.applied_date
+    app.notes = app_data.notes
+
+    db.commit()
+    db.refresh(app)
+    db.close()
+
+    return app
