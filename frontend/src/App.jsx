@@ -3,11 +3,23 @@ import { useEffect, useState } from "react";
 function App() {
   const [applications, setApplications] = useState([]);
 
-  useEffect(() => {
+  function loadApplications() {
     fetch("http://127.0.0.1:8000/applications")
       .then((response) => response.json())
       .then((data) => setApplications(data));
+  }
+
+  useEffect(() => {
+    loadApplications();
   }, []);
+
+  function deleteApplication(appId) {
+    fetch(`http://127.0.0.1:8000/applications/${appId}`, {
+      method: "DELETE",
+    }).then(() => {
+      loadApplications();
+    });
+  }
 
   return (
     <div style={{ padding: "20px" }}>
@@ -24,6 +36,7 @@ function App() {
             <th>Status</th>
             <th>Applied Date</th>
             <th>Notes</th>
+            <th>Actions</th>
           </tr>
         </thead>
 
@@ -36,6 +49,11 @@ function App() {
               <td>{app.status}</td>
               <td>{app.applied_date}</td>
               <td>{app.notes}</td>
+              <td>
+                <button onClick={() => deleteApplication(app.id)}>
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
