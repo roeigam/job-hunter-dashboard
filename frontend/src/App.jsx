@@ -9,6 +9,10 @@ function App() {
   const [appliedDate, setAppliedDate] = useState("");
   const [notes, setNotes] = useState("");
 
+  const [editingId, setEditingId] = useState(null);
+  const [editStatus, setEditStatus] = useState("");
+  const [editNotes, setEditNotes] = useState("");
+
   function loadApplications() {
     fetch("http://127.0.0.1:8000/applications")
       .then((response) => response.json())
@@ -51,6 +55,39 @@ function App() {
       setStatus("");
       setAppliedDate("");
       setNotes("");
+    });
+  }
+
+  function startEditing(app) {
+    setEditingId(app.id);
+    setEditStatus(app.status);
+    setEditNotes(app.notes || "");
+  }
+
+  function cancelEditing() {
+    setEditingId(null);
+    setEditStatus("");
+    setEditNotes("");
+  }
+
+  function saveEdit(app) {
+    const updatedApplication = {
+      company: app.company,
+      position: app.position,
+      status: editStatus,
+      applied_date: app.applied_date,
+      notes: editNotes,
+    };
+
+    fetch(`http://127.0.0.1:8000/applications/${app.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedApplication),
+    }).then(() => {
+      loadApplications();
+      cancelEditing();
     });
   }
 
@@ -114,13 +151,47 @@ function App() {
               <td>{app.id}</td>
               <td>{app.company}</td>
               <td>{app.position}</td>
-              <td>{app.status}</td>
-              <td>{app.applied_date}</td>
-              <td>{app.notes}</td>
+
               <td>
-                <button onClick={() => deleteApplication(app.id)}>
-                  Delete
-                </button>
+                {editingId === app.id ? (
+                  <input
+                    type="text"
+                    value={editStatus}
+                    onChange={(e) => setEditStatus(e.target.value)}
+                  />
+                ) : (
+                  app.status
+                )}
+              </td>
+
+              <td>{app.applied_date}</td>
+
+              <td>
+                {editingId === app.id ? (
+                  <input
+                    type="text"
+                    value={editNotes}
+                    onChange={(e) => setEditNotes(e.target.value)}
+                  />
+                ) : (
+                  app.notes
+                )}
+              </td>
+
+              <td>
+                {editingId === app.id ? (
+                  <>
+                    <button onClick={() => saveEdit(app)}>Save</button>
+                    <button onClick={cancelEditing}>Cancel</button>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => startEditing(app)}>Edit</button>
+                    <button onClick={() => deleteApplication(app.id)}>
+                      Delete
+                    </button>
+                  </>
+                )}
               </td>
             </tr>
           ))}
