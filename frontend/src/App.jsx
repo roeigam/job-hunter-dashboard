@@ -3,6 +3,12 @@ import { useEffect, useState } from "react";
 function App() {
   const [applications, setApplications] = useState([]);
 
+  const [company, setCompany] = useState("");
+  const [position, setPosition] = useState("");
+  const [status, setStatus] = useState("");
+  const [appliedDate, setAppliedDate] = useState("");
+  const [notes, setNotes] = useState("");
+
   function loadApplications() {
     fetch("http://127.0.0.1:8000/applications")
       .then((response) => response.json())
@@ -21,9 +27,71 @@ function App() {
     });
   }
 
+  function addApplication(event) {
+    event.preventDefault();
+
+    const newApplication = {
+      company: company,
+      position: position,
+      status: status,
+      applied_date: appliedDate,
+      notes: notes,
+    };
+
+    fetch("http://127.0.0.1:8000/applications", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newApplication),
+    }).then(() => {
+      loadApplications();
+      setCompany("");
+      setPosition("");
+      setStatus("");
+      setAppliedDate("");
+      setNotes("");
+    });
+  }
+
   return (
     <div style={{ padding: "20px" }}>
       <h1>Job Hunter Dashboard</h1>
+
+      <h2>Add Application</h2>
+
+      <form onSubmit={addApplication} style={{ marginBottom: "20px" }}>
+        <input
+          type="text"
+          placeholder="Company"
+          value={company}
+          onChange={(e) => setCompany(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Position"
+          value={position}
+          onChange={(e) => setPosition(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Status"
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+        />
+        <input
+          type="date"
+          value={appliedDate}
+          onChange={(e) => setAppliedDate(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Notes"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+        />
+        <button type="submit">Add</button>
+      </form>
 
       <h2>Applications</h2>
 
