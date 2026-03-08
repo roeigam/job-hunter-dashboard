@@ -15,13 +15,31 @@ function App() {
 
       <h2>Applications</h2>
 
-      <ul>
-        {applications.map((app) => (
-          <li key={app.id}>
-            {app.company} — {app.position} — {app.status}
-          </li>
-        ))}
-      </ul>
+      <table border="1" cellPadding="10">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Company</th>
+            <th>Position</th>
+            <th>Status</th>
+            <th>Applied Date</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {applications.map((app) => (
+            <tr key={app.id}>
+              <td>{app.id}</td>
+              <td>{app.company}</td>
+              <td>{app.position}</td>
+              <td>{app.status}</td>
+              <td>{app.applied_date}</td>
+              <td>{app.notes}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
