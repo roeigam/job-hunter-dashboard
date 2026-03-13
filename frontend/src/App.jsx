@@ -91,6 +91,46 @@ function App() {
     });
   }
 
+  function getStatusStyle(status) {
+    switch (status.toLowerCase()) {
+      case "applied":
+        return {
+          backgroundColor: "#1e3a8a",
+          color: "white",
+          padding: "4px 8px",
+          borderRadius: "8px",
+        };
+      case "interview":
+        return {
+          backgroundColor: "#b45309",
+          color: "white",
+          padding: "4px 8px",
+          borderRadius: "8px",
+        };
+      case "hired":
+        return {
+          backgroundColor: "#166534",
+          color: "white",
+          padding: "4px 8px",
+          borderRadius: "8px",
+        };
+      case "rejected":
+        return {
+          backgroundColor: "#991b1b",
+          color: "white",
+          padding: "4px 8px",
+          borderRadius: "8px",
+        };
+      default:
+        return {
+          backgroundColor: "#374151",
+          color: "white",
+          padding: "4px 8px",
+          borderRadius: "8px",
+        };
+    }
+  }
+
   return (
     <div style={{ padding: "20px" }}>
       <h1>Job Hunter Dashboard</h1>
@@ -160,7 +200,7 @@ function App() {
                     onChange={(e) => setEditStatus(e.target.value)}
                   />
                 ) : (
-                  app.status
+                  <span style={getStatusStyle(app.status)}>{app.status}</span>
                 )}
               </td>
 
