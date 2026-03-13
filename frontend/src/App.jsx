@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
   const [applications, setApplications] = useState([]);
@@ -133,7 +134,7 @@ function App() {
   }
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="container">
       <h1>Job Hunter Dashboard</h1>
 
       <h2>Add Application</h2>
