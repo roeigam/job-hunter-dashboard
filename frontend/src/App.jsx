@@ -8,6 +8,7 @@ function App() {
   const [status, setStatus] = useState("");
   const [appliedDate, setAppliedDate] = useState("");
   const [notes, setNotes] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [editingId, setEditingId] = useState(null);
   const [editStatus, setEditStatus] = useState("");
@@ -172,6 +173,14 @@ function App() {
 
       <h2>Applications</h2>
 
+      <input
+        type="text"
+        placeholder="Search applications..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{ marginBottom: "15px", padding: "5px", width: "300px" }}
+      />
+
       <table border="1" cellPadding="10">
         <thead>
           <tr>
@@ -186,55 +195,59 @@ function App() {
         </thead>
 
         <tbody>
-          {applications.map((app) => (
-            <tr key={app.id}>
-              <td>{app.id}</td>
-              <td>{app.company}</td>
-              <td>{app.position}</td>
+          {applications
+            .filter((app) =>
+              app.company.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((app) => (
+              <tr key={app.id}>
+                <td>{app.id}</td>
+                <td>{app.company}</td>
+                <td>{app.position}</td>
 
-              <td>
-                {editingId === app.id ? (
-                  <input
-                    type="text"
-                    value={editStatus}
-                    onChange={(e) => setEditStatus(e.target.value)}
-                  />
-                ) : (
-                  <span style={getStatusStyle(app.status)}>{app.status}</span>
-                )}
-              </td>
+                <td>
+                  {editingId === app.id ? (
+                    <input
+                      type="text"
+                      value={editStatus}
+                      onChange={(e) => setEditStatus(e.target.value)}
+                    />
+                  ) : (
+                    <span style={getStatusStyle(app.status)}>{app.status}</span>
+                  )}
+                </td>
 
-              <td>{app.applied_date}</td>
+                <td>{app.applied_date}</td>
 
-              <td>
-                {editingId === app.id ? (
-                  <input
-                    type="text"
-                    value={editNotes}
-                    onChange={(e) => setEditNotes(e.target.value)}
-                  />
-                ) : (
-                  app.notes
-                )}
-              </td>
+                <td>
+                  {editingId === app.id ? (
+                    <input
+                      type="text"
+                      value={editNotes}
+                      onChange={(e) => setEditNotes(e.target.value)}
+                    />
+                  ) : (
+                    app.notes
+                  )}
+                </td>
 
-              <td>
-                {editingId === app.id ? (
-                  <>
-                    <button onClick={() => saveEdit(app)}>Save</button>
-                    <button onClick={cancelEditing}>Cancel</button>
-                  </>
-                ) : (
-                  <>
-                    <button onClick={() => startEditing(app)}>Edit</button>
-                    <button onClick={() => deleteApplication(app.id)}>
-                      Delete
-                    </button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
+                <td>
+                  {editingId === app.id ? (
+                    <>
+                      <button onClick={() => saveEdit(app)}>Save</button>
+                      <button onClick={cancelEditing}>Cancel</button>
+                    </>
+                  ) : (
+                    <>
+                      <button onClick={() => startEditing(app)}>Edit</button>
+                      <button onClick={() => deleteApplication(app.id)}>
+                        Delete
+                      </button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
