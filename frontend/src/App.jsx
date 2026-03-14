@@ -3,6 +3,7 @@ import "./App.css";
 
 function App() {
   const [applications, setApplications] = useState([]);
+  const statusOptions = ["Applied", "Interview", "Hired", "Rejected"];
 
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
@@ -152,12 +153,14 @@ function App() {
           value={position}
           onChange={(e) => setPosition(e.target.value)}
         />
-        <input
-          type="text"
-          placeholder="Status"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-        />
+        <select value={status} onChange={(e) => setStatus(e.target.value)}>
+          <option value="">Select status</option>
+          {statusOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
         <input
           type="date"
           value={appliedDate}
@@ -208,11 +211,16 @@ function App() {
 
                 <td>
                   {editingId === app.id ? (
-                    <input
-                      type="text"
+                    <select
                       value={editStatus}
                       onChange={(e) => setEditStatus(e.target.value)}
-                    />
+                    >
+                      {statusOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
                   ) : (
                     <span style={getStatusStyle(app.status)}>{app.status}</span>
                   )}
