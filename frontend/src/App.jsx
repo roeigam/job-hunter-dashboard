@@ -15,6 +15,7 @@ function App() {
   const [editingId, setEditingId] = useState(null);
   const [editStatus, setEditStatus] = useState("");
   const [editNotes, setEditNotes] = useState("");
+  const [formError, setFormError] = useState("");
 
   function loadApplications() {
     fetch("http://127.0.0.1:8000/applications")
@@ -41,6 +42,23 @@ function App() {
   function addApplication(event) {
     event.preventDefault();
 
+    if (!company.trim()) {
+      setFormError("Company is required.");
+      return;
+    }
+
+    if (!position.trim()) {
+      setFormError("Position is required.");
+      return;
+    }
+
+    if (!status.trim()) {
+      setFormError("Status is required.");
+      return;
+    }
+
+    setFormError("");
+
     const newApplication = {
       company: company,
       position: position,
@@ -62,6 +80,7 @@ function App() {
       setStatus("");
       setAppliedDate("");
       setNotes("");
+      setFormError("");
     });
   }
 
@@ -143,6 +162,10 @@ function App() {
       <h1>Job Hunter Dashboard</h1>
 
       <h2>Add Application</h2>
+
+      {formError && (
+        <p style={{ color: "red", marginBottom: "10px" }}>{formError}</p>
+      )}
 
       <form onSubmit={addApplication} style={{ marginBottom: "20px" }}>
         <input
