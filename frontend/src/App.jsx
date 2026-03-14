@@ -34,6 +34,10 @@ function App() {
     });
   }
 
+  function getTodayDate() {
+    return new Date().toISOString().split("T")[0];
+  }
+
   function addApplication(event) {
     event.preventDefault();
 
@@ -41,7 +45,7 @@ function App() {
       company: company,
       position: position,
       status: status,
-      applied_date: appliedDate,
+      applied_date: appliedDate || getTodayDate(),
       notes: notes,
     };
 
