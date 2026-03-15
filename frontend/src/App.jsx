@@ -16,6 +16,7 @@ function App() {
   const [editStatus, setEditStatus] = useState("");
   const [editNotes, setEditNotes] = useState("");
   const [formError, setFormError] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
 
   function loadApplications() {
     fetch("http://127.0.0.1:8000/applications")
@@ -204,13 +205,18 @@ function App() {
 
       <h2>Applications</h2>
 
-      <input
+      <select
         className="search-input"
-        type="text"
-        placeholder="Search applications..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+        value={statusFilter}
+        onChange={(e) => setStatusFilter(e.target.value)}
+      >
+        <option value="All">All Statuses</option>
+        {statusOptions.map((status) => (
+          <option key={status} value={status}>
+            {status}
+          </option>
+        ))}
+      </select>
 
       <div className="table-wrapper">
         <table>
@@ -230,6 +236,9 @@ function App() {
             {applications
               .filter((app) =>
                 app.company.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .filter((app) =>
+                statusFilter === "All" ? true : app.status === statusFilter
               )
               .map((app) => (
                 <tr key={app.id}>
