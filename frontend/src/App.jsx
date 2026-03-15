@@ -164,10 +164,10 @@ function App() {
       <h2>Add Application</h2>
 
       {formError && (
-        <p style={{ color: "red", marginBottom: "10px" }}>{formError}</p>
+        <p className="error-message">{formError}</p>
       )}
 
-      <form onSubmit={addApplication} style={{ marginBottom: "20px" }}>
+      <form onSubmit={addApplication} className="form-row">
         <input
           type="text"
           placeholder="Company"
@@ -205,88 +205,114 @@ function App() {
       <h2>Applications</h2>
 
       <input
+        className="search-input"
         type="text"
         placeholder="Search applications..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ marginBottom: "15px", padding: "5px", width: "300px" }}
       />
 
-      <table border="1" cellPadding="10">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Company</th>
-            <th>Position</th>
-            <th>Status</th>
-            <th>Applied Date</th>
-            <th>Notes</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
+      <div className="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Company</th>
+              <th>Position</th>
+              <th>Status</th>
+              <th>Applied Date</th>
+              <th>Notes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
 
-        <tbody>
-          {applications
-            .filter((app) =>
-              app.company.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .map((app) => (
-              <tr key={app.id}>
-                <td>{app.id}</td>
-                <td>{app.company}</td>
-                <td>{app.position}</td>
+          <tbody>
+            {applications
+              .filter((app) =>
+                app.company.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((app) => (
+                <tr key={app.id}>
+                  <td>{app.id}</td>
+                  <td>{app.company}</td>
+                  <td>{app.position}</td>
 
-                <td>
-                  {editingId === app.id ? (
-                    <select
-                      value={editStatus}
-                      onChange={(e) => setEditStatus(e.target.value)}
-                    >
-                      {statusOptions.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <span style={getStatusStyle(app.status)}>{app.status}</span>
-                  )}
-                </td>
+                  <td>
+                    {editingId === app.id ? (
+                      <select
+                        className="inline-select"
+                        value={editStatus}
+                        onChange={(e) => setEditStatus(e.target.value)}
+                      >
+                        {statusOptions.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <span style={getStatusStyle(app.status)}>{app.status}</span>
+                    )}
+                  </td>
 
-                <td>{app.applied_date}</td>
+                  <td>{app.applied_date}</td>
 
-                <td>
-                  {editingId === app.id ? (
-                    <input
-                      type="text"
-                      value={editNotes}
-                      onChange={(e) => setEditNotes(e.target.value)}
-                    />
-                  ) : (
-                    app.notes
-                  )}
-                </td>
+                  <td>
+                    {editingId === app.id ? (
+                      <input
+                        className="inline-input"
+                        type="text"
+                        value={editNotes}
+                        onChange={(e) => setEditNotes(e.target.value)}
+                      />
+                    ) : (
+                      app.notes
+                    )}
+                  </td>
 
-                <td>
-                  {editingId === app.id ? (
-                    <>
-                      <button onClick={() => saveEdit(app)}>Save</button>
-                      <button onClick={cancelEditing}>Cancel</button>
-                    </>
-                  ) : (
-                    <>
-                      <button onClick={() => startEditing(app)}>Edit</button>
-                      <button onClick={() => deleteApplication(app.id)}>
-                        Delete
-                      </button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
-    </div>
+                  <td>
+                    <div className="actions">
+                      {editingId === app.id ? (
+                        <>
+                          <button
+                            className="action-button"
+                            onClick={() => saveEdit(app)}
+                          >
+                            Save
+                          </button>
+
+                          <button
+                            className="action-button"
+                            onClick={cancelEditing}
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            className="action-button"
+                            onClick={() => startEditing(app)}
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            className="action-button"
+                            onClick={() => deleteApplication(app.id)}
+                          >
+                            Delete
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+    </div >
   );
 }
 
